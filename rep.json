@@ -1,0 +1,14 @@
+{
+    "reportType": "GET_FLAT_FILE_ALL_ORDERS_DATA_BY_LAST_UPDATE_GENERAL",
+    "processingEndTime": "2023-08-23T18:59:26+00:00",
+    "processingStatus": "DONE",
+    "marketplaceIds": [
+        "A38D8NSA03LJTC"
+    ],
+    "reportDocumentId": "amzn1.spdoc.1.4.eu.84036c96-fa18-40bb-8fac-905a4f78063b.T3OJ4CGMDJ3Q27.2407",
+    "reportId": "1102164019592",
+    "dataEndTime": "2023-08-23T18:59:03+00:00",
+    "createdTime": "2023-08-23T18:59:03+00:00",
+    "processingStartTime": "2023-08-23T18:59:12+00:00",
+    "dataStartTime": "2023-08-22T18:59:01+00:00"
+}

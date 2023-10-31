@@ -5,7 +5,7 @@ let res = await sellingPartner.callAPI({
     reportDocumentId: "amzn1.spdoc.1.4.eu.46e350c8-1e6f-4cc4-8721-3165f5bd4744.T2ISMRNPULE4S7.107"
   },
   options: {
-    version: ""
+    version: "2021-06-30"
   }
 });
 

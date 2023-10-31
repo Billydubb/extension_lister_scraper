@@ -1,12 +1,12 @@
 # Reports
 
-1. Create Report
+1. Create Report (`createReport`)
     createReport: Starts the process of creating a report. Returns a `reportId`
 
-2. Verify that the report processing is done
+2. Verify that the report processing is done (`getReport`) 
     getReport: gets a report by reportId. Among others it returns the `processingStatus`, which can be DONE, FATAL or CANCELLED and `reportDocumentId` which is needed to actually download the report.
 
-3. Retrieve a report
+3. Retrieve a report `getReportDocument`
     getReportDocument: returns `url` and `compressionAlgorithm` in case the report has been compressed.
 
 TODO: 
