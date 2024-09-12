@@ -1,38 +1,31 @@
 import puppeteer from 'puppeteer';
+import { CategoryToScrape, CategoryToScrapeObject } from './categories';
 
-export const Category = {
-  PRODUCTIVITY_TOOLS: "https://chromewebstore.google.com/category/extensions/productivity/tools"
-}
 
-export const scrapeSimpleExtInfo = async (categoryName) => {
+export const scrapeSimpleExtInfo = async (categoryToScrape: CategoryToScrape, limit?: number) => {
   // Launch the browser
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
-  // await page.setViewport({ width: 2048, height: 1024 });
   
-  
-  // Open the Chrome Web Store page
-  if(!categoryName) {
-    url = "https://chromewebstore.google.com/category/extensions/productivity/tools"
-  } else {
-    url = Category[categoryName]
-  }
-  await page.goto(url, { waitUntil: 'networkidle2' });
+
+
+    // Open the Chrome Web Store page
+  await page.goto(CategoryToScrapeObject[categoryToScrape].url, { waitUntil: 'networkidle2' });
 
   // Scroll and click 'Load more' until no more new extensions are loaded
   const idAndInfoSet = new Set()
   let lastNumExtensions = 0;
   let counter = 0
-  // while (counter < 10) {
-  while (counter < 2) {
-    try {  // Wait for the button to be visible
+
+  const maxCounter = limit || 10
+  while (counter < maxCounter) {
+    try {
       // Wait for the button to be visible
       await page.waitForSelector('button.mUIrbf-LgbsSe', { visible: true, timeout: 5000 });
   
         // Use JavaScript to click the button
       await page.evaluate(() => {
-        const button = document.querySelector('button.mUIrbf-LgbsSe');
-
+        const button = document.querySelector('button.mUIrbf-LgbsSe') as HTMLElement;
         if (button) {
           button.click();
         }
@@ -44,10 +37,9 @@ export const scrapeSimpleExtInfo = async (categoryName) => {
         const idsAndInfo = Array.from(extensions).map(ext => {
           const id = ext.getAttribute('data-item-id')
           const name = ext.querySelector('p[title]')?.getAttribute('title');
-          const rating = ext.querySelector('span.Vq0ZA')?.innerText
-          const numberOfRatings = ext.querySelector('span.Y30PE')?.innerText?.replace(/[()]/g, '')
-          const shortDescription = ext.querySelector('p.Uufqmb')?.innerText
-
+          const rating = ext.querySelector('span.Vq0ZA')?.textContent
+          const numberOfRatings = ext.querySelector('span.Y30PE')?.textContent?.replace(/[()]/g, '')
+          const shortDescription = ext.querySelector('p.Uufqmb')?.textContent
 
           return {
             id,
@@ -60,17 +52,15 @@ export const scrapeSimpleExtInfo = async (categoryName) => {
         return idsAndInfo;
       });
 
-      console.log(newIdsAndInfo)
-
       newIdsAndInfo.forEach(newIdAndInfo => idAndInfoSet.add(newIdAndInfo));
 
-      // if(lastNumExtensions >= idAndInfoSet.size) {
-      //   counter++
-      // } else {
-      //   counter = 0
-      // }
-
-      counter++
+      // If a limit was given, then stop at the limit, else only stop when the number of extensions doesn't increase
+      // for maxCounter (which is 10 by default) times
+      if((lastNumExtensions >= idAndInfoSet.size) || !!limit) {
+        counter++
+      } else {
+        counter = 0
+      }
 
       lastNumExtensions = idAndInfoSet.size;
       console.log("extensions: ", lastNumExtensions)

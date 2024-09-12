@@ -2,7 +2,7 @@ import prisma from "./prisma.js"
 import puppeteer from 'puppeteer';
 import {formatNumberOfRatings} from './formatNumberOfRatings.js';
 
-export async function storeExtensionIds(simpleExtInfo) {
+export async function storeSimpleExtInfo(simpleExtInfo, categoryName: string) {
 
     if(!simpleExtInfo) {
       return
@@ -19,6 +19,7 @@ export async function storeExtensionIds(simpleExtInfo) {
           rating: idAndInfo.rating,
           numberOfRatings: formatNumberOfRatings(idAndInfo.numberOfRatings),
           shortDescription: idAndInfo.shortDescription,
+          category: categoryName
         },
         create: {
           id: idAndInfo.id,
@@ -26,6 +27,7 @@ export async function storeExtensionIds(simpleExtInfo) {
           rating: idAndInfo.rating,
           numberOfRatings: formatNumberOfRatings(idAndInfo.numberOfRatings),
           shortDescription: idAndInfo.shortDescription,
+          category: categoryName
         },
       })
     })
