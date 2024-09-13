@@ -19,6 +19,23 @@ export const scrapeSimpleExtInfo = async (categoryToScrape: CategoryToScrape, li
 
   const maxCounter = limit || 10
   while (counter < maxCounter) {
+    let retryCount = 0;
+    while (retryCount < 3) {
+      try {
+        await page.waitForSelector('button.mUIrbf-LgbsSe', { visible: true, timeout: 5000 });
+        break;
+      } catch (error) {
+        retryCount++;
+        if (retryCount === 3) {
+          console.log("Button not found after 3 retries. Breaking loop.");
+          counter = maxCounter; // Force exit from outer loop
+          break;
+        }
+      }
+    }
+
+    if (counter === maxCounter) break;
+
     try {
       // Wait for the button to be visible
       await page.waitForSelector('button.mUIrbf-LgbsSe', { visible: true, timeout: 5000 });
@@ -46,13 +63,17 @@ export const scrapeSimpleExtInfo = async (categoryToScrape: CategoryToScrape, li
             name,
             rating,
             numberOfRatings,
-            shortDescription
+            shortDescription,
+            category: ""
           }
         });
         return idsAndInfo;
       });
 
-      newIdsAndInfo.forEach(newIdAndInfo => idAndInfoSet.add(newIdAndInfo));
+      newIdsAndInfo.forEach(newIdAndInfo => {
+        newIdAndInfo.category = CategoryToScrapeObject[categoryToScrape].categoryName
+        idAndInfoSet.add(newIdAndInfo)
+      });
 
       // If a limit was given, then stop at the limit, else only stop when the number of extensions doesn't increase
       // for maxCounter (which is 10 by default) times
@@ -70,8 +91,8 @@ export const scrapeSimpleExtInfo = async (categoryToScrape: CategoryToScrape, li
       
       await page.waitForNetworkIdle()
     } catch (e) {
-      counter = 10
-      console.log(e)
+      counter = maxCounter;
+      console.log(e);
     }
   }
 

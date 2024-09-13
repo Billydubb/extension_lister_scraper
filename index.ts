@@ -18,8 +18,8 @@ import { storeSimpleExtInfo } from "./storeSimpleExtInfo.js"
  */  
 
 async function init() {
-  const simpleInfoSet = await scrapeSimpleExtInfo("HOUSEHOLD", 10)
-  await storeSimpleExtInfo(simpleInfoSet, CategoryToScrapeObject.HOUSEHOLD.categoryName)
+  const simpleInfoSet = await scrapeSimpleExtInfo("DEVELOPER_TOOLS", 10)
+  await storeSimpleExtInfo(simpleInfoSet)
 
 
   // const extensions = await loadSimpleExtensionInfo(32)
