@@ -7,7 +7,7 @@ export const scrapeSimpleExtInfo = async (categoryToScrape: CategoryToScrape, li
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   
-
+console.log("categoryToScrape: ", categoryToScrape)
 
     // Open the Chrome Web Store page
   await page.goto(CategoryToScrapeObject[categoryToScrape].url, { waitUntil: 'networkidle2' });

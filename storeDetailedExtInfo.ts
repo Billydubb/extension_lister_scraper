@@ -19,7 +19,7 @@ export async function storeDetailedExtensions(detailedExtensions) {
         // Details:
         shortDescription: extension.shortDescription,
         numberOfUsers: Number(extension.numberOfUsers),
-        categories: JSON.stringify(extension.categories),
+        category: extension.category,
         longDescription: extension.longDescription,
         languages: JSON.stringify(extension.languages),
         lastUpdated: new Date(extension.lastUpdated),
@@ -36,7 +36,7 @@ export async function storeDetailedExtensions(detailedExtensions) {
         shortDescription: extension.shortDescription,
         // Details:
         numberOfUsers: Number(extension.numberOfUsers),
-        categories: JSON.stringify(extension.categories),
+        category: extension.category,
         longDescription: extension.longDescription,
         languages: JSON.stringify(extension.languages),
         lastUpdated: new Date(extension.lastUpdated),
