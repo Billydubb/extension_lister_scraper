@@ -19,10 +19,10 @@ import { storeSimpleExtInfo } from "./storeSimpleExtInfo.js"
 
 async function init() {
   
-  const pagesPerCategory = 2
-  await scrapeAndStoreSimpleInfo(pagesPerCategory)
+  // const pagesPerCategory = 2
+  // await scrapeAndStoreSimpleInfo(pagesPerCategory)
   // For testing
-  const limit = 5
+  const limit = 2
   await scrapeAndStoreDetailedInfoInBatches(limit)
 
 }

@@ -43,14 +43,28 @@ export const scrapeDetailedExtInfo = async (extensions, limit?: number) => {
       const version = versionDivElement ? versionDivElement.textContent : "No version"
 
       const languages: string[] = []
-      // This query only gets the languages if there are so many that it is shown as a tooltip
-      // TODO: find extensions with few enough languages so that they are styled differently and scrape those too.
+      
       document.querySelectorAll(".UT2P2b").forEach((el) => {
         const text = el.textContent?.trim();
         if (text && text !== ',') {
           languages.push(text);
         }
       })
+      
+      // If the languages array is empty, that means there is only one language
+      // So we need to get it this way
+      if(languages.length === 0) {
+        const languageParentElement = document.querySelector(".ZbWJPd.FFG5Td")
+        if(languageParentElement) {
+          const languageElement = languageParentElement.children[1]
+          if(languageElement) {
+            const text = languageElement.textContent?.trim();
+            if (text && text !== ',') {
+            languages.push(text);
+          }
+          }
+        }
+      }
 
       const isFeaturedElement = document.querySelector(".OmOMFc")
       const isFeatured = isFeaturedElement ? isFeaturedElement.textContent : false
