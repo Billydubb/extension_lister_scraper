@@ -7,6 +7,7 @@ import { scrapeDetailedExtInfo } from './scrapeDetailedExtInfo';
 import { storeDetailedExtensions } from './storeDetailedExtInfo';
 import prisma from "./prisma"
 import { acquireLock, releaseLock } from './lockAndRelease/scraperLockAndRelease';
+import { logger } from './logger';
 
   
   async function scrapeAndStoreSimpleInfo(pages?: number) {
@@ -15,7 +16,7 @@ import { acquireLock, releaseLock } from './lockAndRelease/scraperLockAndRelease
         const simpleInfoSet = await scrapeSimpleExtInfo(categoryToScrape as CategoryToScrape, pages)
         await storeSimpleExtInfo(simpleInfoSet)
       } catch (error) {
-        console.error(`Error scraping simple info for category ${categoryToScrape}:`, error);
+        logger.error(`Error scraping simple info for category ${categoryToScrape}:`, error);
       } 
     }
   }
@@ -35,26 +36,26 @@ import { acquireLock, releaseLock } from './lockAndRelease/scraperLockAndRelease
       try {
         const detailedExtensions = await scrapeDetailedExtInfo(extensions, limit);
         await storeDetailedExtensions(detailedExtensions);
-        console.log(`Processed batch of ${extensions.length} extensions`);
+        logger.info(`Processed batch of ${extensions.length} extensions`);
       } catch (error) {
-        console.error(`Error processing batch starting at index ${skip}:`, error);
+        logger.error(`Error processing batch starting at index ${skip}:`, error);
       }
   
       skip += batchSize;
     }
   
-    console.log('Finished processing all extensions');
+    logger.info('Finished processing all extensions');
   }
 
 export async function scrapeAndStoreAll() {
     if (!(await acquireLock())) {
-        console.log('Another job is in progress or was recently run. Skipping.');
+        logger.info('Another job is in progress or was recently run. Skipping.');
         return;
         }
 
 
   try {
-    console.log('Cron: Starting scrape job...');
+    logger.info('Cron: Starting scrape job...');
     const start = performance.now();  
     const pagesPerCategory = 2
     // await scrapeAndStoreSimpleInfo(pagesPerCategory)
@@ -69,13 +70,13 @@ export async function scrapeAndStoreAll() {
   
   
     const end = performance.now();
-    console.log(`Scraped and stored extensions in: ${((end - start) / 60000).toFixed(2)} minutes`);
+    logger.info(`Scraped and stored extensions in: ${((end - start) / 60000).toFixed(2)} minutes`);
   
     await prisma.$disconnect()
     // Your existing scraping logic here
-    console.log('Cron: Scrape job completed successfully.');
+    logger.info('Cron: Scrape job completed successfully.');
   } catch (error) {
-    console.error('Error during scrape job:', error);
+    logger.error('Error during scrape job:', error);
   } finally {
     await releaseLock();
   }
@@ -98,7 +99,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 //     try {
 //       await scrapeAndStoreAll();
 //     } catch (error) {
-//       console.error('Error running cronJob: cronScrapeAndStoreAll:', error);
+//       logger.error('Error running cronJob: cronScrapeAndStoreAll:', error);
 //     }
 //   },
 //   {

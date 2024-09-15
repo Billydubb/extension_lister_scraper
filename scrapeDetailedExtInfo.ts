@@ -1,7 +1,8 @@
 import puppeteer from 'puppeteer';
+import { logger } from './logger';
 
 export const scrapeDetailedExtInfo = async (extensions, limit?: number) => {
-  console.log("Scraping detailed extension info")
+  logger.info("Scraping detailed extension info")
   // Launch the browser
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
@@ -13,7 +14,7 @@ export const scrapeDetailedExtInfo = async (extensions, limit?: number) => {
       break
     }
 
-    console.log(`...for extension id:  ${ext.id}`)
+    logger.info(`...for extension id:  ${ext.id}`)
     const extensionPageUrl = `https://chrome.google.com/webstore/detail/${ext.id}`;
     await page.goto(extensionPageUrl, { waitUntil: 'networkidle2' });
 
@@ -113,6 +114,6 @@ export const scrapeDetailedExtInfo = async (extensions, limit?: number) => {
   await browser.close();
 
   // Print the scraped data
-  console.log(detailedExtensions);
+  logger.debug(detailedExtensions);
   return detailedExtensions
 };

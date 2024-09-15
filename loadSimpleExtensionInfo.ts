@@ -8,7 +8,7 @@ export async function loadSimpleExtensionInfo(batchSize: number, skip: number = 
 
     skip += batchSize;
 
-  return extensions
+ return extensions
 }
 
 

@@ -1,3 +1,4 @@
+import { logger } from "./logger.js"
 import prisma from "./prisma.js"
 
 export async function storeDetailedExtensions(detailedExtensions) {
@@ -43,7 +44,7 @@ export async function storeDetailedExtensions(detailedExtensions) {
         },
       })
     } catch (error) {
-      console.error(`Error upserting extension ${extension.id}:`, error)
+      logger.error(`Error upserting extension ${extension.id}:`, error)
     }
   }
 }

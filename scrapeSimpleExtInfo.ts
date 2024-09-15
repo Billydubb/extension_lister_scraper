@@ -1,9 +1,10 @@
 import puppeteer from 'puppeteer';
 import { CategoryToScrape, CategoryToScrapeObject } from './categories';
+import { logger } from './logger';
 
 
 export const scrapeSimpleExtInfo = async (categoryToScrape: CategoryToScrape, limit?: number) => {
-  console.log("Scraping simple extension info for category: ", categoryToScrape)
+  logger.info("Scraping simple extension info for category: ", categoryToScrape)
   // Launch the browser
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
@@ -27,7 +28,7 @@ export const scrapeSimpleExtInfo = async (categoryToScrape: CategoryToScrape, li
       } catch (error) {
         retryCount++;
         if (retryCount === 3) {
-          console.log("Button not found after 3 retries. Breaking loop.");
+          logger.info("Button not found after 3 retries. Breaking loop.");
           counter = maxCounter; // Force exit from outer loop
           break;
         }
@@ -84,15 +85,15 @@ export const scrapeSimpleExtInfo = async (categoryToScrape: CategoryToScrape, li
       }
 
       lastNumExtensions = idAndInfoSet.size;
-      console.log("extensions: ", lastNumExtensions)
-      console.log("counter: ", counter)
+      logger.info("extensions: ", lastNumExtensions)
+      logger.info("counter: ", counter)
 
 
       
       await page.waitForNetworkIdle()
     } catch (e) {
       counter = maxCounter;
-      console.log(e);
+      logger.error(e);
     }
   }
 
