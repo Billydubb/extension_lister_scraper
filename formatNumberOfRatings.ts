@@ -1,4 +1,4 @@
-export function formatNumberOfRatings(numberOfRatingsString) {
+export function formatNumberOfRatings(numberOfRatingsString?: string) {
     if(!numberOfRatingsString) {
       return
     }
