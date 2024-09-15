@@ -8,8 +8,6 @@ export async function loadSimpleExtensionInfo(batchSize: number, skip: number = 
 
     skip += batchSize;
 
-  
-  await prisma.$disconnect();
   return extensions
 }
 

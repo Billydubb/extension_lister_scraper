@@ -1,7 +1,7 @@
 import { formatNumberOfRatings } from "./formatNumberOfRatings.js"
 import { loadSimpleExtensionInfo } from "./loadSimpleExtensionInfo.js"
 import { scrapeDetailedExtInfo } from "./scrapeDetailedExtInfo.js"
-import prisma from "../chrome-webstore-next/prisma/prisma.ts"
+import prisma from "./prisma"
 import { CategoryToScrape, CategoryToScrapeObject } from "./categories.ts"
 import { scrapeSimpleExtInfo } from "./scrapeSimpleExtInfo.ts"
 import { storeDetailedExtensions } from "./storeDetailedExtInfo.js"
@@ -19,18 +19,33 @@ import { storeSimpleExtInfo } from "./storeSimpleExtInfo.js"
 
 async function init() {
   
-  // const pagesPerCategory = 2
+  const start = performance.now();  
+  const pagesPerCategory = 2
   // await scrapeAndStoreSimpleInfo(pagesPerCategory)
+
   // For testing
-  const limit = 2
-  await scrapeAndStoreDetailedInfoInBatches(limit)
+  // const limit = 2
+  // await scrapeAndStoreDetailedInfoInBatches(limit)
+
+  //For production
+  await scrapeAndStoreDetailedInfoInBatches()
+
+
+  const end = performance.now();
+  console.log(`Scraped and stored extensions in: ${((end - start) / 60000).toFixed(2)} minutes`);
+
+  await prisma.$disconnect()
 
 }
 
 async function scrapeAndStoreSimpleInfo(pages?: number) {
   for (const categoryToScrape in CategoryToScrapeObject) {
-    const simpleInfoSet = await scrapeSimpleExtInfo(categoryToScrape as CategoryToScrape, pages)
-    await storeSimpleExtInfo(simpleInfoSet)
+    try {
+      const simpleInfoSet = await scrapeSimpleExtInfo(categoryToScrape as CategoryToScrape, pages)
+      await storeSimpleExtInfo(simpleInfoSet)
+    } catch (error) {
+      console.error(`Error scraping simple info for category ${categoryToScrape}:`, error);
+    } 
   }
 }
 
@@ -52,7 +67,6 @@ async function scrapeAndStoreDetailedInfoInBatches(limit?: number) {
       console.log(`Processed batch of ${extensions.length} extensions`);
     } catch (error) {
       console.error(`Error processing batch starting at index ${skip}:`, error);
-      // Optionally implement retry logic here
     }
 
     skip += batchSize;

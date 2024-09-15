@@ -3,11 +3,11 @@ import { CategoryToScrape, CategoryToScrapeObject } from './categories';
 
 
 export const scrapeSimpleExtInfo = async (categoryToScrape: CategoryToScrape, limit?: number) => {
+  console.log("Scraping simple extension info for category: ", categoryToScrape)
   // Launch the browser
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
   
-console.log("categoryToScrape: ", categoryToScrape)
 
     // Open the Chrome Web Store page
   await page.goto(CategoryToScrapeObject[categoryToScrape].url, { waitUntil: 'networkidle2' });
