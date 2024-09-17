@@ -14,7 +14,8 @@ export const scrapeSimpleExtInfo = async (categoryToScrape: CategoryToScrape, li
   await page.goto(CategoryToScrapeObject[categoryToScrape].url, { waitUntil: 'networkidle2' });
 
   // Scroll and click 'Load more' until no more new extensions are loaded
-  const idAndInfoSet = new Set()
+  let idAndInfoSet = new Set()
+  let idAndInfoMap = new Map();
   let lastNumExtensions = 0;
   let counter = 0
 
@@ -73,8 +74,11 @@ export const scrapeSimpleExtInfo = async (categoryToScrape: CategoryToScrape, li
 
       newIdsAndInfo.forEach(newIdAndInfo => {
         newIdAndInfo.category = CategoryToScrapeObject[categoryToScrape].categoryName
-        idAndInfoSet.add(newIdAndInfo)
+        const key = newIdAndInfo.id;
+        idAndInfoMap.set(key, newIdAndInfo);
       });
+
+      idAndInfoSet = new Set(idAndInfoMap.values());
 
       // If a limit was given, then stop at the limit, else only stop when the number of extensions doesn't increase
       // for maxCounter (which is 10 by default) times
