@@ -52,6 +52,6 @@
     "index.ts",
     "**/*.ts",
     "**/*.tsx", 
-    "pathUtils.js",
+    "pathUtils.ts",
   ]
 }
