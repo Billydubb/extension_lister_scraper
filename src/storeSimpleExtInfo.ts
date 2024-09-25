@@ -1,6 +1,6 @@
-import prisma from "./prisma.js"
+import prisma from "./prisma"
 import puppeteer from 'puppeteer';
-import {formatNumberOfRatings} from './formatNumberOfRatings.js';
+import {formatNumberOfRatings} from './formatNumberOfRatings';
 
 export async function storeSimpleExtInfo(simpleExtInfo) {
 

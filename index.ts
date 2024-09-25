@@ -1,3 +1,3 @@
-import { scrapeAndStoreAll } from "./cronScrapeAndStoreAll";
+import { scrapeAndStoreAll } from "./src/cronScrapeAndStoreAll";
 
 scrapeAndStoreAll()

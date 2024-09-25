@@ -5,7 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "tsx index.ts",
+    "dev": "tsx index.ts",
+    "build": "tsc",
+    "postbuild": "node fix-imports.js",
+    "prod": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "run-clear-db": "tsx scripts/clearDb.ts"
   },
@@ -26,6 +29,7 @@
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
+    "replace-in-file": "^8.2.0",
     "tsx": "^4.17.0",
     "typescript": "^5"
   }

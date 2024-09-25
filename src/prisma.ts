@@ -1,4 +1,4 @@
-import { PrismaClient } from '../chrome-webstore-next/node_modules/.prisma/client';
+import { PrismaClient } from '../../chrome-webstore-next/node_modules/.prisma/client/index.js';
 
 let prisma: PrismaClient;
 

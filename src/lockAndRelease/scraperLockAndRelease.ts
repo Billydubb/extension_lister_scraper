@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { ROOT_DIR } from '../pathUtils';
+import { ROOT_DIR } from '../../pathUtils';
 import { logger } from '../logger';
 
 const LOCK_FILE = path.join(ROOT_DIR, 'scraper_lock');
@@ -19,7 +19,7 @@ export async function acquireLock(): Promise<boolean> {
 
     logger.info('Recent lock file exists. Skipping.');
     return false;
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === 'ENOENT') {
       // Lock file doesn't exist, create it
       await writeLockFile();
