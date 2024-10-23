@@ -1,11 +1,14 @@
 import puppeteer from 'puppeteer';
 import { logger } from './logger';
+import { deleteExtension } from 'deleteExtension';
 
 export const scrapeDetailedExtInfo = async (extensions, limit?: number) => {
-  logger.info("Scraping detailed extension info")
   // Launch the browser
   const browser = await puppeteer.launch({ headless: true });
   const page = await browser.newPage();
+  try {
+    logger.info("Scraping detailed extension info")
+
 
   const detailedExtensions: any[] = [];
   for (const ext of extensions) {
@@ -19,6 +22,12 @@ export const scrapeDetailedExtInfo = async (extensions, limit?: number) => {
     await page.goto(extensionPageUrl, { waitUntil: 'networkidle2' });
 
     const detailedData = await page.evaluate(() => {
+
+      // if "This item is not available" is in the page, return undefined
+      if(document.querySelector(".eFHPDf")?.textContent?.includes("This item is not available")) {
+        return undefined
+      }
+
       const websiteUrlAnchorElement = document.querySelector('div.kYv2db a.cJI8ee');
       const websiteUrl = websiteUrlAnchorElement ? websiteUrlAnchorElement.getAttribute("href") : "No url"
       const usersDivelement = document.querySelector('div.F9iKBc');
@@ -97,6 +106,12 @@ export const scrapeDetailedExtInfo = async (extensions, limit?: number) => {
       };
     });
 
+    if(!detailedData) {
+      logger.info(`Deleting extension ${ext.id} from DB because it is not available in the chrome web store`)
+      deleteExtension(ext.id)
+      continue
+    }
+
     detailedExtensions.push({
       ...ext,
       numberOfUsers: detailedData.numberOfUsers,
@@ -115,5 +130,11 @@ export const scrapeDetailedExtInfo = async (extensions, limit?: number) => {
 
   // Print the scraped data
   logger.debug(detailedExtensions);
-  return detailedExtensions
+    return detailedExtensions
+  } catch (error) {
+    logger.error(error)
+    await browser.close()
+  } finally {
+    await browser.close()
+  }
 };
