@@ -36,13 +36,13 @@ export const _logger = createLogger({
 // Modify the extended logger
 const loggerExtended = {
   info: (...args: unknown[]) =>
-    _logger.info(String(args[0]), { additionalInfo: args.slice(1) }),
+    _logger.info(util.format(...args)), // Use util.format to format all arguments
   error: (...args: unknown[]) =>
-    _logger.error(String(args[0]), { additionalInfo: args.slice(1) }),
+    _logger.error(util.format(...args)), // Use util.format to format all arguments
   warn: (...args: unknown[]) =>
-    _logger.warn(String(args[0]), { additionalInfo: args.slice(1) }),
+    _logger.warn(util.format(...args)), // Use util.format to format all arguments
   debug: (...args: unknown[]) =>
-    _logger.debug(String(args[0]), { additionalInfo: args.slice(1) }),
+    _logger.debug(util.format(...args)), // Use util.format to format all arguments
 };
 
 export { loggerExtended as logger };

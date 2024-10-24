@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 import { logger } from './logger';
-import { deleteExtension } from 'deleteExtension';
+import { deleteExtension } from './deleteExtension';
 
 export const scrapeDetailedExtInfo = async (extensions, limit?: number) => {
   // Launch the browser
@@ -129,8 +129,8 @@ export const scrapeDetailedExtInfo = async (extensions, limit?: number) => {
   await browser.close();
 
   // Print the scraped data
-  logger.debug(detailedExtensions);
-    return detailedExtensions
+  logger.info(detailedExtensions);
+  return detailedExtensions
   } catch (error) {
     logger.error(error)
     await browser.close()
