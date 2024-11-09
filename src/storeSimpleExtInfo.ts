@@ -8,6 +8,7 @@ export async function storeSimpleExtInfo(simpleExtInfo) {
       return
     }
 
+
     await simpleExtInfo.forEach(async idAndInfo => {
       await prisma.extensions.upsert({
         where: {
@@ -16,7 +17,7 @@ export async function storeSimpleExtInfo(simpleExtInfo) {
         update: {
           id: idAndInfo.id,
           name: idAndInfo.name,
-          rating: idAndInfo.rating,
+          rating: idAndInfo.rating ? parseFloat(idAndInfo.rating) : null,
           numberOfRatings: formatNumberOfRatings(idAndInfo.numberOfRatings),
           shortDescription: idAndInfo.shortDescription,
           category: idAndInfo.category
@@ -24,7 +25,7 @@ export async function storeSimpleExtInfo(simpleExtInfo) {
         create: {
           id: idAndInfo.id,
           name: idAndInfo.name,
-          rating: idAndInfo.rating,
+          rating: idAndInfo.rating ? parseFloat(idAndInfo.rating) : null,
           numberOfRatings: formatNumberOfRatings(idAndInfo.numberOfRatings),
           shortDescription: idAndInfo.shortDescription,
           category: idAndInfo.category

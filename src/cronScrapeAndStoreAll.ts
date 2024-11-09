@@ -55,19 +55,18 @@ export async function scrapeAndStoreAll() {
 
 
   try {
-    logger.info('Cron: Starting scrape job...');
+    logger.info('Cron: Starting scrape job... on production: ' + isProduction);
     const start = performance.now();  
-    const pagesPerCategory = 2
-    // await scrapeAndStoreSimpleInfo(pagesPerCategory)
-    await scrapeAndStoreSimpleInfo()
-  
-    // For testing
-    // const limit = 2
-    // await scrapeAndStoreDetailedInfoInBatches(limit)
-  
-    //For production
-    await scrapeAndStoreDetailedInfoInBatches()
-  
+
+    if(isProduction) {
+      await scrapeAndStoreSimpleInfo()
+      await scrapeAndStoreDetailedInfoInBatches()
+    } else {
+      const pagesPerCategory = 2
+      await scrapeAndStoreSimpleInfo(pagesPerCategory)  
+      const limit = 2
+      await scrapeAndStoreDetailedInfoInBatches(limit)
+    }
   
     const end = performance.now();
     logger.info(`Scraped and stored extensions in: ${((end - start) / 60000).toFixed(2)} minutes`);
@@ -87,24 +86,22 @@ export async function scrapeAndStoreAll() {
 // Check if environment is production or development
 const isProduction = process.env.NODE_ENV === 'production';
 
+// Run at 1:00 AM on Monday, Wednesday, and Friday
+const cronExpression = isProduction ? '0 1 * * 1,3,5' : '*/10 * * * * *';
 
-//TODO: figure out how often to run this and then implement the commented out code
-// // Schedule cron job
-// const cronExpression = isProduction ? '*/5 * * * *' : '*/10 * * * * *';
+// Initialize the cron job
+const job = cron.schedule(
+  cronExpression,
+  async () => {
+    try {
+      await scrapeAndStoreAll();
+    } catch (error) {
+      logger.error('Error running cronJob: cronScrapeAndStoreAll:', error);
+    }
+  },
+  {
+    scheduled: true,
+  },
+);
 
-// // Initialize the cron job
-// const job = cron.schedule(
-//   cronExpression,
-//   async () => {
-//     try {
-//       await scrapeAndStoreAll();
-//     } catch (error) {
-//       logger.error('Error running cronJob: cronScrapeAndStoreAll:', error);
-//     }
-//   },
-//   {
-//     scheduled: true,
-//   },
-// );
-
-// export default job;
+export default job;

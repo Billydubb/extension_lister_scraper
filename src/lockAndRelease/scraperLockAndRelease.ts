@@ -4,7 +4,7 @@ import { ROOT_DIR } from '../../pathUtils';
 import { logger } from '../logger';
 
 const LOCK_FILE = path.join(ROOT_DIR, 'scraper_lock');
-const MAX_LOCK_AGE = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
+const MAX_LOCK_AGE = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
 export async function acquireLock(): Promise<boolean> {
   try {
