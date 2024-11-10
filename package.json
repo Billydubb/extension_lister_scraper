@@ -6,9 +6,10 @@
   "type": "module",
   "scripts": {
     "dev": "tsx index.ts",
+    "prod": "node dist/index.js",
     "build": "rm -rf dist && tsc",
     "postbuild": "node fix-imports.js",
-    "prod": "node dist/index.js",
+    "deploy": "git push origin main && git push prod main",
     "test": "echo \"Error: no test specified\" && exit 1",
     "run-clear-db": "tsx scripts/clearDb.ts"
   },
