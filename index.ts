@@ -1,3 +1,4 @@
-import { scrapeAndStoreAll } from "./src/cronScrapeAndStoreAll";
+import cronScrapeAndStoreAll, { scrapeAndStoreAll } from "./src/cronScrapeAndStoreAll";
 
-scrapeAndStoreAll()
+// @ts-ignore
+cronScrapeAndStoreAll.runImmediatelyAndStart()

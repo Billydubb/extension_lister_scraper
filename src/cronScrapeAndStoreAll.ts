@@ -100,8 +100,17 @@ const job = cron.schedule(
     }
   },
   {
-    scheduled: true,
+    scheduled: false,
   },
 );
+
+// Add a new method to run immediately and start the schedule
+// @ts-ignore
+job.runImmediatelyAndStart = async () => {
+    // Run once immediately
+    scrapeAndStoreAll();
+    // Then start the scheduled job
+    job.start();
+};
 
 export default job;

@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx index.ts",
-    "prod": "node dist/index.js",
+    "dev": "NODE_ENV=development tsx index.ts",
+    "prod": "NODE_ENV=production node dist/index.js",
     "build": "rm -rf dist && tsc",
     "postbuild": "node fix-imports.js",
     "deploy": "git push origin main && git push prod main",
