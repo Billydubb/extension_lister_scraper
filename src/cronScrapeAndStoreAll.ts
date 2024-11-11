@@ -104,7 +104,7 @@ const job = cron.schedule(
   },
 );
 
-// Add a new method to run immediately and start the schedule
+// Add a new method to run immediately and start the cron-job
 // @ts-ignore
 job.runImmediatelyAndStart = async () => {
     // Run once immediately
